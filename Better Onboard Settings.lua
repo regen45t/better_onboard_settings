@@ -137,15 +137,6 @@ function displayRow(updateFn, eMin, eMax, hasCenter, flipOrder, idSuffix)
         table.insert(increments, 10^e)
     end
     
-    if flipOrder then
-        -- Reverse the order for decreasing increments
-        local temp = {}
-        for i = #increments, 1, -1 do
-            table.insert(temp, increments[i])
-        end
-        increments = temp
-    end
-    
     -- Center button (if hasCenter is true)
     if hasCenter then
         if ui.button("Center##" .. idSuffix) then
@@ -154,25 +145,23 @@ function displayRow(updateFn, eMin, eMax, hasCenter, flipOrder, idSuffix)
         ui.sameLine()
     end
     
-    -- Negative buttons (larger to smaller increments)
     for i = #increments, 1, -1 do
         local increment = increments[i]
-        local label = "-" .. (increment >= 1 and string.format("%.0f", increment) or string.format("%g", increment))
+        local label = (flipOrder and "+" or "-") .. (increment >= 1 and string.format("%.0f", increment) or string.format("%g", increment))
         
         if ui.button(label .. "##" .. idSuffix, vec2(0, 0), repeatButton and ui.ButtonFlags.Repeat) then
-            local newValue = math.round((updateFn(nil) - increment) * (10^precision)) / (10^precision)
+            local newValue = math.round((updateFn(nil) + (flipOrder and increment or -increment)) * (10^precision)) / (10^precision)
             updateFn(newValue)
         end
         ui.sameLine()
     end
-    
-    -- Positive buttons (smaller to larger increments)
+
     for i = 1, #increments do
         local increment = increments[i]
-        local label = "+" .. (increment >= 1 and string.format("%.0f", increment) or string.format("%g", increment))
+        local label = (flipOrder and "-" or "+") .. (increment >= 1 and string.format("%.0f", increment) or string.format("%g", increment))
         
         if ui.button(label .. "##" .. idSuffix, vec2(0, 0), repeatButton and ui.ButtonFlags.Repeat) then
-            local newValue = math.round((updateFn(nil) + increment) * (10^precision)) / (10^precision)
+            local newValue = math.round((updateFn(nil) + (flipOrder and -increment or increment)) * (10^precision)) / (10^precision)
             updateFn(newValue)
         end
         
@@ -328,7 +317,7 @@ function script.betterOnboardSettings()
             onboardCameraParams.yaw = newValue
             ac.setOnboardCameraParams(0, onboardCameraParams, true)
         end
-    end, -2, 0, true, false, "Yaw")
+    end, -2, 0, true, true, "Yaw")
     
     ui.separator()
     
