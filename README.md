@@ -14,4 +14,6 @@ The default global presets provide 5 options for a 30FOV 'meta camera' for No He
 
 ## Installation
 
-To install, either drag and drop the zip into Content Manager, or copy the Better Onboard Settings folder in the .zip into assettocorsa/apps/lua
+To install, download the latest version from the [Releases](https://github.com/regen45t/better_onboard_settings/releases) page, then either drag and drop the zip into Content Manager, or copy the Better Onboard Settings folder in the .zip into assettocorsa/apps/lua
+
+Cloning the repo won't work unless you rename the folder (probably will be something like better_onboard_settings-main) to "Better Onboard Settings" to match the .lua inside, otherwise Assetto Corsa won't run the code and will just show a blank window.
